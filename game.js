@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     initializeGame();
-    initializeComet();
 });
 
-let gameContainer;
+
 let gameInterval;
 let timerUpdateInterval;
 let score = 0;
@@ -12,10 +11,31 @@ let encouragementDisplayed = false;
 let badFruitClicked = false;
 let comet;
 
-
-const trailCanvas = document.getElementById('trail-canvas');
-const trailCtx = trailCanvas.getContext('2d');
+let gameContainer;
+let trailCanvas;
+let trailCtx;
 const trail = [];
+
+
+function initializeGame() {
+    gameContainer = document.getElementById('game-container');
+    // Add an event listener to the game container for mouse movements
+    trailCanvas = document.getElementById('trail-canvas');
+    trailCtx = trailCanvas.getContext('2d');
+
+    gameContainer.addEventListener('mousemove', function (event) {
+        const rect = gameContainer.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        addTrailPoint(mouseX, mouseY);
+        drawTrail();
+    });
+
+    document.getElementById('start-btn').addEventListener('click', startGame);
+
+    updateScore();
+}
 
 function addTrailPoint(x, y) {
     trail.push({ x, y, createdAt: Date.now() });
@@ -38,59 +58,28 @@ function drawTrail() {
             trailCtx.fill();
         }
     }
+}function addTrailPoint(x, y) {
+    trail.push({ x, y, createdAt: Date.now() });
 }
 
+function drawTrail() {
+    trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+    const radius = 5; // Adjust the radius of each point
 
-// Event listener for mousemove to update the trail
-document.addEventListener('mousemove', (event) => {
-    const { clientX, clientY } = event;
-    addTrailPoint(clientX, clientY);
-});
+    for (let i = 0; i < trail.length; i++) {
+        const point = trail[i];
+        const lifeLeft = 1 - (Date.now() - point.createdAt) / 500; // Adjust the duration of the trail
 
-// Function to animate the trail
-function animateTrail() {
-    drawTrail();
-    requestAnimationFrame(animateTrail);
+        if (lifeLeft > 0) {
+            const alpha = lifeLeft > 0.5 ? 1 : lifeLeft * 2; // Adjust the alpha (transparency) based on lifeLeft
+            trailCtx.fillStyle = `rgba(128, 255, 128, ${alpha})`; // Adjust the color
+
+            trailCtx.beginPath();
+            trailCtx.arc(point.x, point.y, radius, 0, 2 * Math.PI);
+            trailCtx.fill();
+        }
+    }
 }
-
-// Start animating the trail
-animateTrail();
-
-
-
-function initializeGame() {
-    gameContainer = document.getElementById('game-container');
-
-    document.getElementById('start-btn').addEventListener('click', startGame);
-
-    updateScore();
-}
-
-function initializeComet() {
-    comet = document.createElement('div');
-    comet.classList.add('comet');
-    gameContainer.appendChild(comet);
-  
-    gameContainer.addEventListener('mousemove', moveComet);
-  }
-  
-function moveComet(event) {
-    const cometSize = 20;
-    const cometSpeed = 0.1;
-  
-    const x = event.clientX - cometSize / 2;
-    const y = event.clientY - cometSize / 2;
-  
-    comet.style.left = `${x}px`;
-    comet.style.top = `${y}px`;
-    comet.style.opacity = 1;
-  
-    setTimeout(() => {
-      comet.style.opacity = 0;
-    }, 500);
-  }
-  
-
 function getEncouragementMessage() {
     const messages = [
         'Well done! Your final score is',
@@ -154,7 +143,7 @@ function stopGame() {
     // Clear existing message elements
     document.querySelectorAll('.encouragement-message').forEach(messageElement => gameContainer.removeChild(messageElement));
 
-    const encouragementMessage = badFruitClicked ? "Oh no! You cut a bad apple. Can't make the salad now." : `Well done! Your final score is ${score}`;
+    const encouragementMessage = badFruitClicked ? "Oh no! You cut a bad apple. Can't make the salad now." : `You made salad of ${score} Apples, Enjoy...`;
 
     // Create a message element
     const messageElement = document.createElement('div');
@@ -286,15 +275,3 @@ function playHoverSound() {
 document.querySelector('.fruit').addEventListener('mouseover', function () {
     document.getElementById('hover-sound').play();
 });
-
-// 1. heading Apple Salad should be fancy, and it should look cool and colorful for kids.
-// 2. the whitespace on side of the game div should be filled be some color and gaming text.
-// 3. after finishing the game, the message should be displayed inside the div where fruits were getting created.
-// 4. it should encourage user to play again with random messages each time.
-// 5. with each secound the speed of fruit creation should increase by 5 %
-// 6. sound
-// 7. easy normal hard
-// 8. bomb 
-// 9. light effect on slice
-// 10. multiple weapon
-// 11. multiple fruits

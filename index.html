@@ -5,176 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apple Salad</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            cursor: default;
-            overflow: hidden;
-            /* Hide overflow content */
-            background-color: #f5f5f5;
-            background: url('https://imgs.search.brave.com/mI4vBL9293Qo9NpiT5vsbnLu_RINSCOeFCHcGur--Dg/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAyMC8w/OC8zMC8xMS8xNy9o/YWxsb3dlZW4tNTUy/OTIyMV82NDAucG5n');
-        }
-
-
-
-        #wrapper {
-            background-color: #ffd700;
-            /* Set the background color */
-            padding: 20px;
-            /* Add padding for spacing */
-            border-radius: 10px;
-            /* Add border radius for rounded corners */
-            margin-bottom: 20px;
-            /* Adjust margin as needed */
-        }
-
-        #game-container {
-            position: relative;
-            width: 600px;
-            /* Increased size to 2x */
-            height: 600px;
-            /* Increased size to 2x */
-            border: 1px solid #000;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.7);
-            /* Set the background color to very opaque white */
-            overflow: hidden;
-            /* Ensure balls stay within the container */
-        }
-        .comet {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background-color: red; /* Change the color as needed */
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-}
-
-
-        .ball {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            background-size: cover;
-        }
-
-        button:active {
-            transform: scale(0.95);
-            /* Scale down when a button is clicked */
-        }
-
-        .car {
-            background-image: url('https://imgs.search.brave.com/ZLiDMFaMY7yHdSAj_8ifUt1CB_RTxig72oibU5gVxmE/rs:fit:500:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzAxLzY1LzcyLzU0/LzM2MF9GXzE2NTcy/NTQyM19rb3N3em9k/MkloN2NZcE5zTDZj/OFJDZUk1b0lYT3BW/ei5qcGc');
-            width: 50px;
-            height: 50px;
-            border-radius: 2px;
-        }
-
-        .fruit {
-            background-image: url('https://imgs.search.brave.com/gPvQucaLy0EiWV9X1120jIOR38DZT9wPG2scHOaa5rI/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93d3cu/aWNvbnBhY2tzLm5l/dC9pY29ucy8yL2Zy/ZWUtYXBwbGUtaWNv/bi0yMzI3LnBuZw');
-            width: 50px;
-            height: 50px;
-            position: absolute;
-            cursor: pointer;
-            background-size: cover;
-        }
-
-        #tools-container {
-            display: flex;
-            margin-bottom: 20px;
-        }
-
-        #info-container {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            padding: 10px;
-            background-color: #4caf50;
-            /* Green color for the info box */
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 1;
-        }
-
-        #timer-container {
-            font-size: 24px;
-            color: #fff;
-        }
-
-        #score-container {
-            font-size: 18px;
-            color: #fff;
-        }
-
-        button {
-            margin: 0 10px;
-            padding: 10px;
-            font-size: 20px;
-            cursor: pointer;
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-        }
-
-
-        #encouragement {
-            margin-top: 10px;
-            font-size: 16px;
-            color: #4caf50;
-        }
-
-        H2 {
-            font-size: 70px;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            /* Use a fun and child-friendly font */
-            color: #eaff00;
-            /* Use a bright and colorful text color */
-            margin-bottom: 10px;
-            /* Add some margin for spacing */
-            animation: floatAnimation 1s infinite alternate;
-            /* Apply the floating animation */
-        }
-
-        @keyframes floatAnimation {
-            from {
-                transform: translateY(0);
-            }
-
-            to {
-                transform: translateY(-10px);
-                /* Adjust the vertical movement */
-            }
-        }
-
-        .bad-fruit {
-    background-image: url('data:image/png;base64,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');
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    cursor: pointer;
-    background-size: cover;
-}
-
-
-#trail-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none; /* Allow interactions with elements beneath the canvas */
-    z-index: 9999; /* Adjust the z-index to make sure it's above other elements */
-}
+       
     </style>
 </head>
 
@@ -186,10 +19,9 @@
         <div id="score-container"></div>
     </div>
 
-    <canvas id="trail-canvas"></canvas>
     <div id="game-container">
         <!-- Balls will be dynamically added here -->
-
+        <canvas id="trail-canvas"></canvas>
     </div>
 
     <button id="start-btn" onclick="startGame()">Start Game</button>
