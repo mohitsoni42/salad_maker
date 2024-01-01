@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 let gameInterval;
 let timerUpdateInterval;
-let score = 0;
+let score = -1;
 let timer = 20;
 let encouragementDisplayed = false;
 let badFruitClicked = false;
@@ -51,11 +51,11 @@ function addTrailPoint(x, y) {
 
 function drawTrail() {
     trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
-    const radius = 5; // Adjust the radius of each point
+    const radius = 6; // Adjust the radius of each point
 
     for (let i = 0; i < trail.length; i++) {
         const point = trail[i];
-        const lifeLeft = 1 - (Date.now() - point.createdAt) / 500; // Adjust the duration of the trail
+        const lifeLeft = 1 - (Date.now() - point.createdAt) / 300; // Adjust the duration of the trail
 
         if (lifeLeft > 0) {
             const alpha = lifeLeft > 0.5 ? 1 : lifeLeft * 2; // Adjust the alpha (transparency) based on lifeLeft
@@ -250,7 +250,7 @@ function createBadFruitElement() {
 
 function updateScore() {
     score++;
-    document.getElementById('score-container').innerText = `Score: ${score}`;
+    document.getElementById('score-container').innerText = `Apples: ${score}`;
 }
 
 function playHoverSound() {
