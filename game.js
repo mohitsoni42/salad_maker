@@ -19,22 +19,30 @@ const trail = [];
 
 function initializeGame() {
     gameContainer = document.getElementById('game-container');
-    // Add an event listener to the game container for mouse movements
     trailCanvas = document.getElementById('trail-canvas');
     trailCtx = trailCanvas.getContext('2d');
 
-    gameContainer.addEventListener('mousemove', function (event) {
-        const rect = gameContainer.getBoundingClientRect();
-        const mouseX = event.clientX - rect.left;
-        const mouseY = event.clientY - rect.top;
-
-        addTrailPoint(mouseX, mouseY);
-        drawTrail();
-    });
+    gameContainer.addEventListener('mousemove', handleMouseMove);
+    resizeTrailCanvas();
 
     document.getElementById('start-btn').addEventListener('click', startGame);
 
     updateScore();
+}
+
+function resizeTrailCanvas() {
+    // Set the size of the trail canvas to match the game container
+    trailCanvas.width = gameContainer.clientWidth;
+    trailCanvas.height = gameContainer.clientHeight;
+}
+
+function handleMouseMove(event) {
+    const rect = gameContainer.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+
+    addTrailPoint(mouseX, mouseY);
+    drawTrail();
 }
 
 function addTrailPoint(x, y) {
@@ -51,28 +59,7 @@ function drawTrail() {
 
         if (lifeLeft > 0) {
             const alpha = lifeLeft > 0.5 ? 1 : lifeLeft * 2; // Adjust the alpha (transparency) based on lifeLeft
-            trailCtx.fillStyle = `rgba(128, 255, 128, ${alpha})`; // Adjust the color
-
-            trailCtx.beginPath();
-            trailCtx.arc(point.x, point.y, radius, 0, 2 * Math.PI);
-            trailCtx.fill();
-        }
-    }
-}function addTrailPoint(x, y) {
-    trail.push({ x, y, createdAt: Date.now() });
-}
-
-function drawTrail() {
-    trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
-    const radius = 5; // Adjust the radius of each point
-
-    for (let i = 0; i < trail.length; i++) {
-        const point = trail[i];
-        const lifeLeft = 1 - (Date.now() - point.createdAt) / 500; // Adjust the duration of the trail
-
-        if (lifeLeft > 0) {
-            const alpha = lifeLeft > 0.5 ? 1 : lifeLeft * 2; // Adjust the alpha (transparency) based on lifeLeft
-            trailCtx.fillStyle = `rgba(128, 255, 128, ${alpha})`; // Adjust the color
+            trailCtx.fillStyle = `rgba(255, 0, 0, ${alpha})`; // Adjust the color
 
             trailCtx.beginPath();
             trailCtx.arc(point.x, point.y, radius, 0, 2 * Math.PI);
